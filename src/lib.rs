@@ -6,6 +6,9 @@ pub mod gerber_ascii;
 pub mod layer;
 pub mod unit_able;
 
+pub use gerber_parser;
+pub use gerber_parser::gerber_types;
+
 use crate::layer::{LayerData, LayerType};
 use derive_more::Display;
 use serde::{Deserialize, Serialize};
