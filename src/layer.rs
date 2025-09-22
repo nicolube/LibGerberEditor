@@ -311,3 +311,16 @@ impl Display for LayerType {
         Ok(())
     }
 }
+
+
+impl From<Layer> for LayerData {
+    fn from(layer: Layer) -> Self {
+        layer.data
+    }
+}
+
+impl From<&Layer> for LayerData {
+    fn from(layer: &Layer) -> Self {
+        layer.data.clone()
+    }
+}

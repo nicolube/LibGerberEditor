@@ -30,6 +30,10 @@ impl Board {
         Ok(Self(result))
     }
 
+    pub fn empty() -> Self {
+        Self(Vec::new())
+    }
+
     pub fn comment(&mut self, txt: String) {
         for layer in self.0.iter_mut() {
             match &mut layer.data {
@@ -74,6 +78,7 @@ impl Board {
             .collect::<Vec<_>>();
         Self::new(reader)
     }
+
     pub fn write_to<T>(
         &self,
         f: &mut impl FnMut(&Layer) -> std::io::Result<BufWriter<T>>,
@@ -90,6 +95,20 @@ impl Board {
 
     pub fn layers(&self) -> Vec<&Layer> {
         self.0.iter().collect()
+    }
+
+    pub fn layers_mut(&mut self) -> Vec<&mut Layer> {
+        self.0.iter_mut().collect()
+    }
+
+    /// Merges layer if it already exists or adds a new one
+    pub fn add_layer(&mut self, layer: Layer) {
+        let existing = self.0.iter_mut().find(|e| e.ty == layer.ty);
+        if let Some(existing) = existing {
+            existing.data.merge(&layer.data)
+        } else {
+            self.0.push(layer);
+        }
     }
 
     pub fn get_layer(&self, ty: &LayerType) -> Option<&Layer> {

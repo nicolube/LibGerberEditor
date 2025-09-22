@@ -6,12 +6,14 @@ pub mod gerber_ascii;
 pub mod layer;
 pub mod unit_able;
 
+use std::collections::HashMap;
 pub use gerber_parser;
 pub use gerber_parser::gerber_types;
 
-use crate::layer::{LayerData, LayerType};
+use crate::layer::{Layer, LayerData, LayerType};
 use derive_more::Display;
 use serde::{Deserialize, Serialize};
+use crate::board::Board;
 
 pub type Result<T> = std::result::Result<T, error::Error>;
 
@@ -71,11 +73,15 @@ macro_rules! load_layer_data {
 #[macro_export]
 macro_rules! load_board_data {
     ($path:expr, $(($name:literal, $ty:expr)),* $(,)?) => {{
-        Board(HashMap::from([
-            $(
-                ($ty, load_layer_data!(concat!($path, $name))),
-            )*
-        ]))
+        let mut board = Board::empty();
+         $(
+            board.add_layer(Layer {
+                ty: $ty,
+                name: $name.to_string(),
+                data: load_layer_data!(concat!($path, $name)).1
+            });
+         )*
+        board
     }};
 }
 
