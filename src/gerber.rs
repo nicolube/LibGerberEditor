@@ -11,12 +11,12 @@ use crate::unit_able::UnitAble;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct GerberLayerData {
-    pub(crate) layer_type: LayerType,
-    pub(crate) coordinate_format: CoordinateFormat,
-    pub(crate) commands: Vec<Command>,
+    pub layer_type: LayerType,
+    pub coordinate_format: CoordinateFormat,
+    pub commands: Vec<Command>,
     unit: Unit,
-    pub(crate) macros: HashMap<String, Vec<MacroContent>>,
-    pub(crate) apertures: HashMap<i32, Aperture>,
+    pub macros: HashMap<String, Vec<MacroContent>>,
+    pub apertures: HashMap<i32, Aperture>,
 }
 
 impl GerberLayerData {
