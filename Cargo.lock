@@ -103,7 +103,7 @@ checksum = "1ced73b1dacfc750a6db6c0a0c3a3853c8b41997e2e2c563dc90804ae6867959"
 [[package]]
 name = "gerber-types"
 version = "0.7.0"
-source = "git+https://github.com/nicolube/gerber-types.git?rev=39e77c13528a2570a46efe35e46d2e0f4de98052#39e77c13528a2570a46efe35e46d2e0f4de98052"
+source = "git+https://github.com/nicolube/gerber-types.git?rev=b8b10f1a5bb1a488505c4998b51a17a4ada923cb#b8b10f1a5bb1a488505c4998b51a17a4ada923cb"
 dependencies = [
  "chrono",
  "num-rational",
@@ -116,7 +116,7 @@ dependencies = [
 [[package]]
 name = "gerber_parser"
 version = "0.4.0"
-source = "git+https://github.com/nicolube/gerber-parser.git#c15de15916a752762a7c6558c8d38cc9b236eb34"
+source = "git+https://github.com/nicolube/gerber-parser.git?branch=master#2352fd32f057ac960d473623d39ce23b43c36b18"
 dependencies = [
  "anyhow",
  "gerber-types",
