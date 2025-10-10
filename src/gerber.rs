@@ -107,6 +107,10 @@ impl GerberLayerData {
         }
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.commands.is_empty()
+    }
+
     pub fn to_unit(mut self, unit: &Unit) -> Self {
         if unit == &self.unit {
             return self;

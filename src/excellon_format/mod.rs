@@ -51,12 +51,15 @@ impl ExcellonLayerData {
         for command in &self.commands {
             match command {
                 Ok(command) => {
-                    writer.write(command.to_string().as_bytes()).unwrap();
+                    writer.write(command.to_string().as_bytes())?;
                 }
                 Err(_) => {}
             }
         }
         Ok(())
+    }
+    pub fn is_empty(&self) -> bool {
+        !self.commands.iter().any(|x| matches!(x, Ok(Command::Coordinate(_, _, _))))
     }
 }
 

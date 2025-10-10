@@ -29,7 +29,7 @@ impl LayerData {
     pub fn parse<T>(
         ty: LayerType,
         reader: BufReader<T>,
-    ) -> result::Result<(LayerType, LayerData), ParseError>
+    ) -> Result<(LayerType, LayerData), ParseError>
     where
         T: Read,
     {
@@ -68,6 +68,14 @@ impl LayerData {
             LayerData::Gerber(layer) => layer.layer_type.clone(),
             LayerData::Excellon(_) => LayerType::Drill,
             LayerData::Info(_) => LayerType::Info,
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        match self {
+            LayerData::Gerber(layer) => layer.is_empty(),
+            LayerData::Excellon(layer) => layer.is_empty(),
+            LayerData::Info(data) => data.is_empty(),
         }
     }
 }
