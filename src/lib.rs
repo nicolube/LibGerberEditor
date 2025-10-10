@@ -6,15 +6,12 @@ pub mod gerber_ascii;
 pub mod layer;
 pub mod unit_able;
 
-use std::collections::HashMap;
 pub use gerber_parser;
 pub use gerber_parser::gerber_types;
 
-use crate::layer::{Layer, LayerData, LayerType};
+use crate::layer::{LayerData, LayerType};
 use derive_more::Display;
 use serde::{Deserialize, Serialize};
-use crate::board::Board;
-
 pub type Result<T> = std::result::Result<T, error::Error>;
 
 pub trait LayerCorners {

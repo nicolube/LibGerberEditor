@@ -7,6 +7,7 @@ use gerber_parser::gerber_types::{Aperture, ApertureDefinition, ApertureMacro, C
 use gerber_parser::{GerberDoc, ParseError};
 use std::collections::HashMap;
 use std::io::{BufReader, BufWriter, Read, Write};
+use crate::gerber_types::InterpolationMode;
 use crate::unit_able::UnitAble;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -217,7 +218,7 @@ impl GerberLayerData {
                     }))
                 }),
         );
-        commands.extend(self.commands.iter().cloned());
+        commands.extend(Command::optimize(&self.commands).into_iter().cloned());
         commands.push(Command::FunctionCode(FunctionCode::MCode(MCode::EndOfFile)));
         commands
     }
@@ -436,5 +437,53 @@ impl LayerStepAndRepeat for (&Unit, &mut Vec<Command>) {
 impl From<GerberLayerData> for LayerData {
     fn from(value: GerberLayerData) -> Self {
         LayerData::Gerber(value)
+    }
+}
+
+pub trait Optimize {
+
+    fn optimize(values: &Vec<Self>) -> Vec<&Self> where Self: Sized;
+
+}
+
+#[derive(Debug, Default)]
+struct OptimizationContext<'a> {
+    quadrant_mode: Option<&'a QuadrantMode>,
+    aperture: Option<&'a i32>,
+    interpolation_mode: Option<&'a InterpolationMode>
+}
+impl Optimize for Command {
+    fn optimize(values: &Vec<Self>) -> Vec<&Self> {
+        let mut result = Vec::new();
+        let mut context = OptimizationContext::default();
+        for command in values.iter() {
+            match command {
+                Command::ExtendedCode(ExtendedCode::StepAndRepeat(_)) => {
+                    context = OptimizationContext::default();
+                }
+                Command::FunctionCode(FunctionCode::DCode(DCode::SelectAperture(current))) => {
+                    if Some(current) == context.aperture {
+                        continue;
+                    }
+                    context.aperture = Some(current)
+                }
+                Command::FunctionCode(FunctionCode::GCode(GCode::InterpolationMode(current))) => {
+                    if Some(current) == context.interpolation_mode {
+                        continue;
+                    }
+                    context.interpolation_mode = Some(current)
+                }
+                Command::FunctionCode(FunctionCode::GCode(GCode::QuadrantMode(current))) => {
+                    if Some(current) == context.quadrant_mode {
+                        continue;
+                    }
+                    context.quadrant_mode = Some(current)
+                },
+                _ => {}
+            }
+            result.push(command);
+
+        }
+        result
     }
 }
